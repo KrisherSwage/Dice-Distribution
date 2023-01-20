@@ -132,7 +132,7 @@ namespace Dice_Distribution
 
         static void Main(string[] args)
         {
-            Console.SetWindowSize(160, 45); //чуть увеличу консоль
+            Console.SetWindowSize(160, 50); //чуть увеличу консоль
 
             Console.WriteLine("Для выхода закройте приложение.\n");
 
