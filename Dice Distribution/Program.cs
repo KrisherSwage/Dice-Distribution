@@ -8,9 +8,9 @@ namespace Dice_Distribution
 {
     internal class Program
     {
-        static List<int> RecSum(int facet, int amt, List<int> facetsARR) //метод получения 2х чисел от пользователя
+        static List<ulong> RecSum(ulong facet, ulong amt, List<ulong> facetsARR) //метод получения 2х чисел от пользователя
         {
-            List<int> secondFac = new List<int>(); //список с предыдущими суммами костей
+            List<ulong> secondFac = new List<ulong>(); //список с предыдущими суммами костей
             if (amt <= 2) //значение по умолчанию, когда дойдем до конца
             {
                 secondFac = facetsARR; //равно значниям одной кости
@@ -20,49 +20,49 @@ namespace Dice_Distribution
                 secondFac = RecSum(facet, amt - 1, facetsARR); //предыдущие суммы костей
             }
 
-            List<int> thFac = new List<int>(); //пустой список
-            for (int i = 0; i < secondFac.Count; i++)
+            List<ulong> thFac = new List<ulong>(); //пустой список
+            for (ulong i = 0; i < Convert.ToUInt64(secondFac.Count); i++)
             {
-                for (int j = 1; j <= facet; j++)
+                for (ulong j = 1; j <= facet; j++)
                 {
-                    thFac.Add(secondFac[i] + j); //заполняем старыми и новыми суммами костей
+                    thFac.Add(secondFac[(int)i] + j); //заполняем старыми и новыми суммами костей
                 }
             }
 
             return thFac;
         }
 
-        static void ResultOutput(int diceFacet, int diceAmt, Dictionary<int, int> nums)
+        static void ResultOutput(ulong diceFacet, ulong diceAmt, Dictionary<ulong, ulong> nums)
         {
-            int maxVal = diceFacet * diceAmt; //максимальное значение суммы
-            int minVal = diceAmt; //минимальная сумма костей
+            ulong maxVal = diceFacet * diceAmt; //максимальное значение суммы
+            ulong minVal = diceAmt; //минимальная сумма костей
 
-            for (int i = minVal; i <= maxVal; i++) //вывод результата
+            for (ulong i = minVal; i <= maxVal; i++) //вывод результата
             {
                 var vatiants = nums[i];
 
                 Console.Write($"Сумма на костях: {i}. ");
-                for (int j = Convert.ToString(i).Length; j < 8; j++)
+                for (ulong j = Convert.ToUInt64(Convert.ToString(i).Length); j < 8; j++)
                 {
                     Console.Write(" ");
                 }
 
                 Console.Write($" Количество вариантов: {vatiants}. ");
-                for (int j = Convert.ToString(vatiants).Length; j < 8; j++)
+                for (ulong j = Convert.ToUInt64(Convert.ToString(vatiants).Length); j < 8; j++)
                 {
                     Console.Write(" ");
                 }
 
                 var allVariantsAmt = Math.Pow(diceFacet, diceAmt);
                 Console.Write($" Из: {allVariantsAmt}. ");
-                for (int j = Convert.ToString(allVariantsAmt).Length; j < 8; j++)
+                for (ulong j = Convert.ToUInt64(Convert.ToString(allVariantsAmt).Length); j < 8; j++)
                 {
                     Console.Write(" ");
                 }
 
                 var chance = Math.Round(vatiants / Math.Pow(diceFacet, diceAmt) * 100, 3);
                 Console.Write($" Шанс: {chance} ");
-                for (int j = Convert.ToString(chance).Length; j < 5; j++)
+                for (ulong j = Convert.ToUInt64(Convert.ToString(chance).Length); j < 5; j++)
                 {
                     Console.Write(" ");
                 }
@@ -72,39 +72,39 @@ namespace Dice_Distribution
             }
         }
 
-        static Dictionary<int, int> CalculateResult(int diceFacet, int diceAmt)
+        static Dictionary<ulong, ulong> CalculateResult(ulong diceFacet, ulong diceAmt)
         {
-            int maxVal = diceFacet * diceAmt; //максимальное значение суммы
-            int minVal = diceAmt; //минимальная сумма костей
+            ulong maxVal = diceFacet * diceAmt; //максимальное значение суммы
+            ulong minVal = diceAmt; //минимальная сумма костей
 
-            List<int> facets = new List<int>(); //список значений по умолчанию
-            for (int i = 1; i <= diceFacet; i++)
+            List<ulong> facets = new List<ulong>(); //список значений по умолчанию
+            for (ulong i = 1; i <= diceFacet; i++)
             {
                 facets.Add(i);
             }
 
-            List<int> bigFac = RecSum(diceFacet, diceAmt, facets); //конечный список с верным количеством вариантов
+            List<ulong> bigFac = RecSum(diceFacet, diceAmt, facets); //конечный список с верным количеством вариантов
 
-            var nums = new Dictionary<int, int>(); //словарь для удобной связи суммы кубов и количества вариантов
-            for (int i = minVal; i <= maxVal; i++)
+            var nums = new Dictionary<ulong, ulong>(); //словарь для удобной связи суммы кубов и количества вариантов
+            for (ulong i = minVal; i <= maxVal; i++)
             {
                 nums[i] = 0; //определяем размер и ключи словаря
             }
-            for (int i = 0; i < bigFac.Count; i++)
+            for (ulong i = 0; i < Convert.ToUInt64(bigFac.Count); i++)
             {
-                nums[bigFac[i]] += 1; //заполняем значения словаря
+                nums[bigFac[(int)i]] += 1; //заполняем значения словаря
             }
 
             return nums;
         }
 
-        static int FacetsInput()
+        static ulong FacetsInput()
         {
-            int facets = 0;
+            ulong facets = 0;
             while (true) //цикл проверки числа 
             {
                 Console.WriteLine("Введите количество граней (от двух).");
-                if ((int.TryParse(Console.ReadLine(), out int x)) && (x >= 2)) //условие проверки
+                if ((ulong.TryParse(Console.ReadLine(), out ulong x)) && (x >= 2)) //условие проверки
                 {
                     facets = x;
                     break; //выход из цикла проверки
@@ -114,13 +114,13 @@ namespace Dice_Distribution
             return facets;
         }
 
-        static int DiceAmountInput()
+        static ulong DiceAmountInput()
         {
-            int dice = 0;
+            ulong dice = 0;
             while (true) //цикл проверки числа 
             {
                 Console.WriteLine("Введите количество костей (от двух).");
-                if ((int.TryParse(Console.ReadLine(), out int x)) && (x >= 2)) //условие проверки
+                if ((ulong.TryParse(Console.ReadLine(), out ulong x)) && (x >= 2)) //условие проверки
                 {
                     dice = x;
                     break; //выход из цикла проверки
@@ -140,8 +140,8 @@ namespace Dice_Distribution
             {
                 try
                 {
-                    int diceFacet = FacetsInput(); //количество граней кости
-                    int diceAmt = DiceAmountInput(); //количество костей
+                    ulong diceFacet = FacetsInput(); //количество граней кости
+                    ulong diceAmt = DiceAmountInput(); //количество костей
 
                     Console.WriteLine();
 
@@ -149,8 +149,8 @@ namespace Dice_Distribution
 
                     ResultOutput(diceFacet, diceAmt, nums);
 
-                    Console.WriteLine("\nНажмите для продолжения.");
-                    Console.ReadKey();
+                    Console.WriteLine("\nНажмите enter для продолжения.");
+                    Console.ReadLine();
                 }
                 catch
                 {
