@@ -130,6 +130,31 @@ namespace Dice_Distribution
             return dice;
         }
 
+        static Dictionary<ulong, ulong> AnotherCalcResult(ulong diceFacet, ulong diceAmt)
+        {
+            ulong maxVal = diceFacet * diceAmt; //максимальное значение суммы
+            ulong minVal = diceAmt; //минимальная сумма костей
+
+            var nums = new Dictionary<ulong, ulong>(); //словарь для удобной связи суммы кубов и количества вариантов
+            for (ulong i = minVal; i <= maxVal; i++)
+            {
+                nums[i] = 0; //определяем размер и ключи словаря
+            }
+
+            List<ulong> numericList = new List<ulong>();
+            for (ulong i = 0; i < diceAmt; i++)
+            {
+                numericList.Add(1);
+                //Console.WriteLine(numericList[(int)i]);
+                //Console.WriteLine();
+            }
+
+
+
+
+            return nums;
+        }
+
         static void Main(string[] args)
         {
             Console.SetWindowSize(160, 50); //чуть увеличу консоль
@@ -138,24 +163,25 @@ namespace Dice_Distribution
 
             for (; ; )
             {
-                try
-                {
-                    ulong diceFacet = FacetsInput(); //количество граней кости
-                    ulong diceAmt = DiceAmountInput(); //количество костей
+                //try
+                //{
+                ulong diceFacet = FacetsInput(); //количество граней кости
+                ulong diceAmt = DiceAmountInput(); //количество костей
 
-                    Console.WriteLine();
+                Console.WriteLine();
 
-                    var nums = CalculateResult(diceFacet, diceAmt);
+                //var nums = CalculateResult(diceFacet, diceAmt);
+                var nums = AnotherCalcResult(diceFacet, diceAmt);
 
-                    ResultOutput(diceFacet, diceAmt, nums);
+                ResultOutput(diceFacet, diceAmt, nums);
 
-                    Console.WriteLine("\nНажмите enter для продолжения.");
-                    Console.ReadLine();
-                }
-                catch
-                {
-                    Console.WriteLine("Что-то пошло не так! :(");
-                }
+                Console.WriteLine("\nНажмите enter для продолжения.");
+                Console.ReadLine();
+                //}
+                //catch
+                //{
+                //    Console.WriteLine("Что-то пошло не так! :(");
+                //}
             }
         }
     }
