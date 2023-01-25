@@ -8,6 +8,47 @@ namespace Dice_Distribution
 {
     internal class Program
     {
+
+        static void ResultOutput(ulong diceFacet, ulong diceAmt, Dictionary<ulong, ulong> nums)
+        {
+            ulong maxVal = diceFacet * diceAmt; //максимальное значение суммы
+            ulong minVal = diceAmt; //минимальная сумма костей
+
+            for (ulong i = minVal; i <= maxVal; i++) //вывод результата
+            {
+                var vatiants = nums[i];
+
+                Console.Write($"Сумма на костях: {i}. ");
+                for (ulong j = Convert.ToUInt64(Convert.ToString(i).Length); j < 8; j++)
+                {
+                    Console.Write(" ");
+                }
+
+                Console.Write($" Количество вариантов: {vatiants}. ");
+                for (ulong j = Convert.ToUInt64(Convert.ToString(vatiants).Length); j < 6; j++)
+                {
+                    Console.Write(" ");
+                }
+
+                var allVariantsAmt = Math.Pow(diceFacet, diceAmt);
+                Console.Write($" Из: {allVariantsAmt}. ");
+                for (ulong j = Convert.ToUInt64(Convert.ToString(allVariantsAmt).Length); j < 8; j++)
+                {
+                    Console.Write(" ");
+                }
+
+                var chance = Math.Round(vatiants / Math.Pow(diceFacet, diceAmt) * 100, 3);
+                Console.Write($" Шанс: {chance} ");
+                for (ulong j = Convert.ToUInt64(Convert.ToString(chance).Length); j < 6; j++)
+                {
+                    Console.Write(" ");
+                }
+                Console.Write("%.");
+
+                Console.WriteLine();
+            }
+        }
+
         static List<ulong> RecSum(ulong facet, ulong amt, List<ulong> facetsARR) //метод получения 2х чисел от пользователя
         {
             List<ulong> secondFac = new List<ulong>(); //список с предыдущими суммами костей
@@ -32,45 +73,6 @@ namespace Dice_Distribution
             return thFac;
         }
 
-        static void ResultOutput(ulong diceFacet, ulong diceAmt, Dictionary<ulong, ulong> nums)
-        {
-            ulong maxVal = diceFacet * diceAmt; //максимальное значение суммы
-            ulong minVal = diceAmt; //минимальная сумма костей
-
-            for (ulong i = minVal; i <= maxVal; i++) //вывод результата
-            {
-                var vatiants = nums[i];
-
-                Console.Write($"Сумма на костях: {i}. ");
-                for (ulong j = Convert.ToUInt64(Convert.ToString(i).Length); j < 8; j++)
-                {
-                    Console.Write(" ");
-                }
-
-                Console.Write($" Количество вариантов: {vatiants}. ");
-                for (ulong j = Convert.ToUInt64(Convert.ToString(vatiants).Length); j < 8; j++)
-                {
-                    Console.Write(" ");
-                }
-
-                var allVariantsAmt = Math.Pow(diceFacet, diceAmt);
-                Console.Write($" Из: {allVariantsAmt}. ");
-                for (ulong j = Convert.ToUInt64(Convert.ToString(allVariantsAmt).Length); j < 8; j++)
-                {
-                    Console.Write(" ");
-                }
-
-                var chance = Math.Round(vatiants / Math.Pow(diceFacet, diceAmt) * 100, 3);
-                Console.Write($" Шанс: {chance} ");
-                for (ulong j = Convert.ToUInt64(Convert.ToString(chance).Length); j < 5; j++)
-                {
-                    Console.Write(" ");
-                }
-                Console.Write("%.");
-
-                Console.WriteLine();
-            }
-        }
 
         static Dictionary<ulong, ulong> CalculateResult(ulong diceFacet, ulong diceAmt)
         {
@@ -152,7 +154,43 @@ namespace Dice_Distribution
 
 
 
+            //for (ulong k = 0; k < diceFacet; k++)
+            //{ //сколько раз выводим набор значений - сколько граней
+            //    for (ulong l = 0; l < diceAmt; l++) //сколько раз выводим значение на кубике - сколько кубиков
+            //    {
+            //        //Console.Write();
+            //    }
+            //}
+
+
+            for (ulong l = 0; l < Math.Pow(diceFacet, diceAmt); l++)
+            {
+
+            }
+
+
             return nums;
+        }
+
+        static void vivod(ulong diceFacet, ulong diceAmt)
+        {
+            if (diceAmt == 1)
+            {
+                //for (ulong l = 0; l < Math.Pow(diceFacet, diceAmt); l++)
+                //{
+                Console.Write($"*");
+
+                //}
+                Console.WriteLine();
+            }
+            else
+            {
+                for (ulong l = 1; l < Math.Pow(diceFacet, diceAmt - 1) + 1; l++)
+                {
+                    Console.Write($"{l}");
+                    vivod(diceFacet, diceAmt - 1);
+                }
+            }
         }
 
         static void Main(string[] args)
@@ -170,10 +208,12 @@ namespace Dice_Distribution
 
                 Console.WriteLine();
 
-                //var nums = CalculateResult(diceFacet, diceAmt);
-                var nums = AnotherCalcResult(diceFacet, diceAmt);
-
+                var nums = CalculateResult(diceFacet, diceAmt);
                 ResultOutput(diceFacet, diceAmt, nums);
+
+                //var nums = AnotherCalcResult(diceFacet, diceAmt);
+
+                //vivod(diceFacet, diceAmt);
 
                 Console.WriteLine("\nНажмите enter для продолжения.");
                 Console.ReadLine();
