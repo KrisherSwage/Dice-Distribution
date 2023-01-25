@@ -282,30 +282,30 @@ namespace Dice_Distribution
             {
                 for (; ; )
                 {
-                    //try
-                    //{
-                    int diceFacet = FacetsInput(); //количество граней кости
-                    int diceAmt = DiceAmountInput(); //количество костей
-
-                    Console.WriteLine();
-
-                    //var nums = ExperimentResult((int)diceFacet, (int)diceAmt); //основная работа подсчета
-                    var nums = ExperimentResult((ulong)diceFacet, (ulong)diceAmt); //основная работа подсчета
-
-                    ResultOutputULONG((ulong)diceFacet, (ulong)diceAmt, nums); //вывод результата
-
-                    Console.WriteLine("\nНажмите для продолжения.");
-                    Console.WriteLine("Для выхода из экспериментального метода нажмите \"e\".");
-                    var exit = Console.ReadLine();
-                    if (exit == "e")
+                    try
                     {
-                        goto exitInBeg; //оправдано ли применение goto? -узнаю потом
+                        int diceFacet = FacetsInput(); //количество граней кости
+                        int diceAmt = DiceAmountInput(); //количество костей
+
+                        Console.WriteLine();
+
+                        //var nums = ExperimentResult((int)diceFacet, (int)diceAmt); //основная работа подсчета 
+                        var nums = ExperimentResult((ulong)diceFacet, (ulong)diceAmt); //основная работа подсчета
+
+                        ResultOutputULONG((ulong)diceFacet, (ulong)diceAmt, nums); //вывод результата
+
+                        Console.WriteLine("\nНажмите для продолжения.");
+                        Console.WriteLine("Для выхода из экспериментального метода нажмите \"e\".");
+                        var exit = Console.ReadLine();
+                        if (exit == "e")
+                        {
+                            goto exitInBeg; //оправдано ли применение goto? -узнаю потом
+                        }
                     }
-                    //}
-                    //catch
-                    //{
-                    //    Console.WriteLine("Что-то пошло не так! :(");
-                    //}
+                    catch
+                    {
+                        Console.WriteLine("Что-то пошло не так! :(");
+                    }
                 }
             }
         }
