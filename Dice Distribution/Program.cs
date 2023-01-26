@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Dice_Distribution
 {
@@ -132,66 +133,159 @@ namespace Dice_Distribution
             return dice;
         }
 
-        static Dictionary<ulong, ulong> AnotherCalcResult(ulong diceFacet, ulong diceAmt)
+        //static List<ulong> StrRecSum(ulong facet, ulong amt, List<ulong> facetsARR) //метод получения 2х чисел от пользователя
+        //{
+        //    List<ulong> secondFac = new List<ulong>(); //список с предыдущими суммами костей
+        //    if (amt <= 2) //значение по умолчанию, когда дойдем до конца
+        //    {
+        //        secondFac = facetsARR; //равно значниям одной кости
+        //    }
+        //    else
+        //    {
+        //        secondFac = StrRecSum(facet, amt - 1, facetsARR); //предыдущие суммы костей
+        //    }
+
+        //    List<ulong> thFac = new List<ulong>(); //пустой список
+        //    for (ulong i = 0; i < Convert.ToUInt64(secondFac.Count); i++)
+        //    {
+        //        for (ulong j = 1; j <= facet; j++)
+        //        {
+        //            thFac.Add(secondFac[(int)i] + j); //заполняем старыми и новыми суммами костей
+        //        }
+        //    }
+
+        //    return thFac;
+        //}
+
+        static Dictionary<ulong, ulong> StrCalculateResult(ulong diceFacet, ulong diceAmt)
         {
             ulong maxVal = diceFacet * diceAmt; //максимальное значение суммы
             ulong minVal = diceAmt; //минимальная сумма костей
+
+            List<string> facets = new List<string>(); //список значений по умолчанию
+            for (ulong i = 1; i <= diceFacet; i++)
+            {
+                facets.Add($"{i}");
+            }
+
+            List<string> bigFac = StrRS(diceFacet, diceAmt, facets); //конечный список с верным количеством вариантов
 
             var nums = new Dictionary<ulong, ulong>(); //словарь для удобной связи суммы кубов и количества вариантов
             for (ulong i = minVal; i <= maxVal; i++)
             {
                 nums[i] = 0; //определяем размер и ключи словаря
             }
-
-            List<ulong> numericList = new List<ulong>();
-            for (ulong i = 0; i < diceAmt; i++)
+            for (ulong i = 0; i < Convert.ToUInt64(bigFac.Count); i++)
             {
-                numericList.Add(1);
-                //Console.WriteLine(numericList[(int)i]);
-                //Console.WriteLine();
+                string[] words = bigFac[(int)i].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                for (ulong j = 0; j < diceFacet; j++)
+                {
+                    //Console.WriteLine(words[(int)j]);
+                    nums[Convert.ToUInt64(words[(int)j])] += 1; //заполняем значения словаря
+                    //nums[bigFac[(int)i]] += 1; //заполняем значения словаря
+                }
             }
-
-
-
-
-            //for (ulong k = 0; k < diceFacet; k++)
-            //{ //сколько раз выводим набор значений - сколько граней
-            //    for (ulong l = 0; l < diceAmt; l++) //сколько раз выводим значение на кубике - сколько кубиков
-            //    {
-            //        //Console.Write();
-            //    }
-            //}
-
-
-            for (ulong l = 0; l < Math.Pow(diceFacet, diceAmt); l++)
-            {
-
-            }
-
 
             return nums;
         }
 
-        static void vivod(ulong diceFacet, ulong diceAmt)
+        static List<string> StrRS(ulong facet, ulong amt, List<string> facetArr)
         {
-            if (diceAmt == 1)
+            //for (int i = 0; i < facetArr.Count; i++)
+            //{
+            //    Console.WriteLine(facetArr[i]);
+            //}
+            List<string> secondFac = new List<string>(); //список с предыдущими суммами костей
+            if (amt <= 2) //значение по умолчанию, когда дойдем до конца
             {
-                //for (ulong l = 0; l < Math.Pow(diceFacet, diceAmt); l++)
+                #region
+                //secondFac.Capacity = facetArr.Count;
+                //for (ulong i = 0; i < (ulong)facetArr.Count - 1; i += facet)
                 //{
-                Console.Write($"*");
 
+                //    //for (ulong j = i; j < facet + i; j++)
+                //    for (ulong j = 0; j < facet; j++)
+                //    {
+                //        Console.WriteLine($"i = {i} j = {j} sf.c = {secondFac.Capacity} fA.C = {facetArr.Count}");
+                //        Console.WriteLine(facetArr[(int)j] + 12); //все ок
+                //        Console.WriteLine(secondFac[(int)i] + 1);
+                //        secondFac[(int)i] += ($"{Convert.ToString(facetArr[(int)j])},");
+                //    }
                 //}
-                Console.WriteLine();
+                #endregion
+                string firstStr = "";
+                for (int i = 0; i < facetArr.Count; i++)
+                {
+                    firstStr += ($"{Convert.ToString(facetArr[(int)i])},");
+                }
+                secondFac.Add(firstStr);
+                //secondFac = facetsARR; //равно значниям одной кости
             }
             else
             {
-                for (ulong l = 1; l < Math.Pow(diceFacet, diceAmt - 1) + 1; l++)
+                secondFac = StrRS(facet, amt - 1, facetArr); //предыдущие суммы костей
+            }
+
+            List<string> thFac = new List<string>(/*secondFac.Count * (int)facet*/);
+            //Console.WriteLine(thFac[1]);
+            for (int i = 0; (int)i < Convert.ToInt32(secondFac.Count * (int)facet); i++)
+            {
+                thFac.Add("");
+            }
+            ulong tfc = 0;
+            for (ulong i = 0; i < Convert.ToUInt64(secondFac.Count); i++)
+            //for (ulong i = 0; i < Convert.ToUInt64(thFac.Count); i++)
+            {
+                string[] words = secondFac[(int)i].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                for (ulong j = 0; j < (ulong)words.Length; j++)
                 {
-                    Console.Write($"{l}");
-                    vivod(diceFacet, diceAmt - 1);
+                    for (ulong k = 1; k <= facet; k++)
+                    {
+                        #region
+                        //Console.WriteLine(words[(int)j]); //все ок
+                        //Console.WriteLine(tfc);
+                        //Console.WriteLine(words[tfc]);
+                        //string tfc2 = Convert.ToString(tfc);
+                        //Console.WriteLine(thFac[Convert.ToInt32(tfc2)]);
+                        //Console.WriteLine(thFac[(int)tfc]);
+                        #endregion
+                        thFac[(int)tfc] += ($"{Convert.ToString((Convert.ToInt32(words[(int)j])) + (int)k)},");
+                    }
+                    //Console.WriteLine(thFac[(int)tfc]);
+                    tfc++;
                 }
             }
+
+            return thFac;
         }
+
+        #region
+        //static Dictionary<ulong, ulong> StrCalculateResult(ulong diceFacet, ulong diceAmt)
+        //{
+        //    ulong maxVal = diceFacet * diceAmt; //максимальное значение суммы
+        //    ulong minVal = diceAmt; //минимальная сумма костей
+
+        //    List<ulong> facets = new List<ulong>(); //список значений по умолчанию
+        //    for (ulong i = 1; i <= diceFacet; i++)
+        //    {
+        //        facets.Add(i);
+        //    }
+
+        //    List<ulong> bigFac = StrRecSum(diceFacet, diceAmt, facets); //конечный список с верным количеством вариантов
+
+        //    var nums = new Dictionary<ulong, ulong>(); //словарь для удобной связи суммы кубов и количества вариантов
+        //    for (ulong i = minVal; i <= maxVal; i++)
+        //    {
+        //        nums[i] = 0; //определяем размер и ключи словаря
+        //    }
+        //    for (ulong i = 0; i < Convert.ToUInt64(bigFac.Count); i++)
+        //    {
+        //        nums[bigFac[(int)i]] += 1; //заполняем значения словаря
+        //    }
+
+        //    return nums;
+        //}
+        #endregion
 
         static void Main(string[] args)
         {
@@ -208,12 +302,15 @@ namespace Dice_Distribution
 
                 Console.WriteLine();
 
-                var nums = CalculateResult(diceFacet, diceAmt);
-                ResultOutput(diceFacet, diceAmt, nums);
+                //var nums = CalculateResult(diceFacet, diceAmt);
+                //ResultOutput(diceFacet, diceAmt, nums);
 
                 //var nums = AnotherCalcResult(diceFacet, diceAmt);
-
                 //vivod(diceFacet, diceAmt);
+                var nums = StrCalculateResult(diceFacet, diceAmt);
+                ResultOutput(diceFacet, diceAmt, nums);
+
+
 
                 Console.WriteLine("\nНажмите enter для продолжения.");
                 Console.ReadLine();
